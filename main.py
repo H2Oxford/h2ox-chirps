@@ -95,12 +95,19 @@ def main():
         msg = "invalid task format"
         print(f"error: {msg}")
         return f"Bad Request: {msg}", 400
+    
+    token=os.environ.get("SLACKBOT_TOKEN")
+    target=os.environ.get("SLACKBOT_TARGET")
+    
+    if token is not None and target is not None:
 
-    slackmessenger = SlackMessenger(
-        token=os.environ.get("SLACKBOT_TOKEN"),
-        target=os.environ.get("SLACKBOT_TARGET"),
-        name="h2ox-chirps",
-    )
+        slackmessenger = SlackMessenger(
+            token=token,
+            target=target,
+            name="h2ox-chirps",
+        )
+    else:
+        slackmessenger = None
 
     today_str = payload["today"]
 
