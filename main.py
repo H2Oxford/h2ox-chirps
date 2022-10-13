@@ -181,10 +181,10 @@ def main_loop(
 
         if code == 200:
             
-            logger.info(f"unzipping {tif_gz_name}")
+            print(f"unzipping {tif_gz_name}")
             decompress(tif_gz_name,tif_name)
 
-            logger.info(f"ingesting prelim {tif_name}")
+            print(f"ingesting prelim {tif_name}")
 
             pipeline_daily_tif(
                 tif_dt_str=do_dt.isoformat()[0:10],
