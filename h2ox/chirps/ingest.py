@@ -93,7 +93,7 @@ def ingest_tif(
         pbar = slices
 
     for ii_s,s in enumerate(pbar):
-        if ii_s % 10 ==0:
+        if ii_s % 100 ==0:
             print(f'single thread here: {ii_s}')
         z[s[0], s[1], time_idx] = im[s[0], s[1]]
 
