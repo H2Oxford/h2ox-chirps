@@ -5,6 +5,7 @@ from datetime import datetime
 from h2ox.chirps.slackbot import SlackMessenger
 
 import zarr
+from gcsfs import GCSFileSystem
 import numpy as np
     
 if __name__=="__main__":
