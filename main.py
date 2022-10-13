@@ -171,6 +171,8 @@ def main_loop(
 
         code = download_or_code(url, tif_name)
 
+        time.sleep(5)
+        
         if code == 200:
 
             logger.info(f"ingesting prelim {tif_name}")
