@@ -10,6 +10,8 @@ from gcsfs import GCSFileSystem
 from skimage import io
 from tqdm import tqdm
 
+from loguru import logger
+
 
 def pipeline_daily_tif(
     tif_dt_str: str,
@@ -90,8 +92,9 @@ def ingest_tif(
     else:
         pbar = slices
 
-    for s in pbar:
-
+    for ii_s,s in enumerate(pbar):
+        if ii_s % 10 ==0:
+            logger.info(f'single thread here: {ii_s}')
         z[s[0], s[1], time_idx] = im[s[0], s[1]]
 
     return 1
