@@ -1,5 +1,6 @@
 import json
 import logging
+import gzip
 import os
 import sys
 import time
@@ -116,6 +117,12 @@ def main():
     return main_loop(today, slackmessenger)
 
 
+def decompress(infile, tofile):
+        with open(infile, 'rb') as inf, open(tofile, 'wb') as tof:
+            decom_str = gzip.decompress(inf.read())
+            tof.write(decom_str)
+
+
 def main_loop(
     today: datetime,
     slackmessenger: Optional[SlackMessenger] = None,
@@ -166,14 +173,16 @@ def main_loop(
         url = prelim_url_template.replace("YEAR", str(do_dt.year)).replace(
             "DATE", do_dt.isoformat()[0:10].replace("-", ".")
         )
-
-        tif_name = os.path.join(storage_root, do_dt.isoformat()[0:10] + ".tif")
-
-        code = download_or_code(url, tif_name)
-
-        time.sleep(5)
         
+        tif_name = os.path.join(storage_root, do_dt.isoformat()[0:10] + ".tif")
+        tif_gz_name = tif_name + '.gz'
+
+        code = download_or_code(url, tif_gz_name)
+
         if code == 200:
+            
+            logger.info(f"unzipping {tif_gz_name}")
+            decompress(tif_gz_name,tif_name)
 
             logger.info(f"ingesting prelim {tif_name}")
 
@@ -195,6 +204,7 @@ def main_loop(
             upload_blob(local_token_path, token_path)
 
             os.remove(tif_name)
+            os.remove(tif_gz_name)
 
         else:
             # reached most recent, break loop
@@ -211,10 +221,14 @@ def main_loop(
         )
 
         tif_name = os.path.join(storage_root, do_dt.isoformat()[0:10] + ".tif")
+        tif_gz_name = tif_name + '.gz'
 
-        code = download_or_code(url, tif_name)
+        code = download_or_code(url, tif_gz_name)
 
         if code == 200:
+            
+            logger.info(f'unzipping {tif_gz_name}')
+            decompress(tif_gz_name,tif_name)
 
             logger.info(f"ingesting post {tif_name}")
 
@@ -237,6 +251,7 @@ def main_loop(
             done_post.append(do_dt.isoformat()[0:10])
 
             os.remove(tif_name)
+            #os.remove(tif_gz_name)
 
         else:
             # reached most recent, break loop

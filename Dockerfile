@@ -7,6 +7,7 @@ ENV PYTHONUNBUFFERED True
 ENV APP_HOME /app
 
 COPY ./main.py $APP_HOME/
+COPY ./batch.py $APP_HOME/
 
 RUN mkdir $APP_HOME/data
 
