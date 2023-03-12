@@ -78,7 +78,7 @@ def ingest_tif(
 
     time_idx = (tif_dt - zero_dt).days
     
-    mapper = GCSFileSystem(requester_pays=True, access="read_only").get_mapper
+    mapper = GCSFileSystem(requester_pays=True).get_mapper
     z = zarr.open(mapper(archive_path), "r+")["precip"]
 
     if isinstance(slices, str):
